@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html style="height: 100%">
+    <head>
+        <meta charset="utf-8">
+        <title>Movie Top250</title>
+    </head>
+    <body style="height: 100%; margin: 0">
+        <div id="container" style="height: 100%"></div>
+        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/echarts-all-3.js"></script>
+        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/dataTool.min.js"></script>
+        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/china.js"></script>
+        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
+        <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
+        <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+        <script src="movie.js"></script>
+        <script>
+            var dom = document.querySelector("#container")
+            var myChart = echarts.init(dom)
+            var app = {}
+            option = null
+
+            var typecountryJson = {
+                "all" : 250,
+                "type" : {
+                    "剧情" : moviesType.typejuqing,
+                    "犯罪" : moviesType.typefanzui,
+                    "动画" : moviesType.typedonghua,
+                    "爱情" : moviesType.typeaiqing,
+                    "喜剧" : moviesType.typexiju,
+                    "动作" : moviesType.typedongzuo,
+                    "其他" : moviesType.typeqita,
+                },
+                "country" : {
+                    "香港" : moviesCountry.HongKong,
+                    "大陆" : moviesCountry.China,
+                    "韩国" : moviesCountry.Korea,
+                    "美国" : moviesCountry.America,
+                    "德国" : moviesCountry.Germany,
+                    "英国" : moviesCountry.England,
+                    "印度" : moviesCountry.India,
+                    "日本" : moviesCountry.Japan,
+                    "法国" : moviesCountry.France,
+                    "其他" : moviesCountry.otherCountry,
+                }
+            }
+
+            var yearJson = {
+                "70年代" : moviesYear.year70,
+                "80年代" : moviesYear.year80,
+                "90年代" : moviesYear.year90,
+                "00年代" : moviesYear.year00,
+                "10年代" : moviesYear.year10,
+            }
+
+            var canvas = document.createElement('canvas')
+            var ctx = canvas.getContext("2d")
+            canvas.width = canvas.height = 100
+            ctx.textAlign = 'center'
+            ctx.textBaseline = 'middle'
+            ctx.globalAlpha = 0.08
+            ctx.font = '20px Microsoft Yahei'
+            ctx.translate(50, 50)
+            ctx.rotate(-Math.PI / 4)
+
+            option = {
+                backgroundColor: {
+                    type: 'pattern',
+                    image: canvas,
+                    repeat: 'repeat'
+                },
+                tooltip: {},
+                title: [{
+                    text: '豆瓣电影---类型与国家数据分析',
+                    subtext: '总计 ' + typecountryJson.all,
+                    x: '25%',
+                    textAlign: 'center'
+                }, {
+                    text: '豆瓣电影---年代数据分析',
+                    x: '75%',
+                    textAlign: 'center'
+                }],
+                grid: [{
+                    top: 50,
+                    width: '50%',
+                    bottom: '45%',
+                    left: 10,
+                    containLabel: true
+                }, {
+                    top: '55%',
+                    width: '50%',
+                    bottom: 0,
+                    left: 10,
+                    containLabel: true
+                }],
+                xAxis: [{
+                    type: 'value',
+                    max: typecountryJson.all,
+                    splitLine: {
+                        show: false
+                    }
+                }, {
+                    type: 'value',
+                    max: typecountryJson.all,
+                    gridIndex: 1,
+                    splitLine: {
+                        show: false
+                    }
+                }],
+                yAxis: [{
+                    type: 'category',
+                    data: Object.keys(typecountryJson.type),
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 30
+                    },
+                    splitLine: {
+                        show: false
+                    }
+                }, {
+                    gridIndex: 1,
+                    type: 'category',
+                    data: Object.keys(typecountryJson.country),
+                    axisLabel: {
+                        interval: 0,
+                        rotate: 30
+                    },
+                    splitLine: {
+                        show: false
+                    }
+                }],
+                series: [{
+                    type: 'bar',
+                    stack: 'type',
+                    z: 3,
+                    label: {
+                        normal: {
+                            position: 'right',
+                            show: true
+                        }
+                    },
+                    data: Object.keys(typecountryJson.type).map(function (key) {
+                        return typecountryJson.type[key];
+                    })
+                }, {
+                    type: 'bar',
+                    stack: 'type',
+                    silent: true,
+                    itemStyle: {
+                        normal: {
+                            color: '#eee'
+                        }
+                    },
+                    data: Object.keys(typecountryJson.type).map(function (key) {
+                        return typecountryJson.all - typecountryJson.type[key];
+                    })
+                }, {
+                    type: 'bar',
+                    stack: 'country',
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    z: 3,
+                    label: {
+                        normal: {
+                            position: 'right',
+                            show: true
+                        }
+                    },
+                    data: Object.keys(typecountryJson.country).map(function (key) {
+                        return typecountryJson.country[key];
+                    })
+                }, {
+                    type: 'bar',
+                    stack: 'country',
+                    silent: true,
+                    xAxisIndex: 1,
+                    yAxisIndex: 1,
+                    itemStyle: {
+                        normal: {
+                            color: '#eee'
+                        }
+                    },
+                    data: Object.keys(typecountryJson.country).map(function (key) {
+                        return typecountryJson.all - typecountryJson.country[key];
+                    })
+                }, {
+                    type: 'pie',
+                    radius: [0, '30%'],
+                    center: ['75%', '25%'],
+                    data: Object.keys(yearJson).map(function (key) {
+                        return {
+                            name: key.replace('.js', ''),
+                            value: yearJson[key]
+                        }
+                    })
+                }]
+            }
+            if (option && typeof option === "object") {
+                myChart.setOption(option, true)
+            }
+        </script>
+    </body>
+</html>
