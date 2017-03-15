@@ -38,10 +38,11 @@ const movieFromDiv = function(div) {
 
 const saveMovies = function(movies) {
     var fs = require("fs")
-    var path = 'douban.json'
+    var path = 'douban.js'
     // 第二个参数是 null
     // 第三个参数是 缩进层次
     var s = JSON.stringify(movies, null, 2)
+
     fs.appendFile(path, s, function(error) {
         if (error !== null) {
             console.log('--- 写入文件错误', error)
@@ -82,13 +83,13 @@ const numberIndex = function(data) {
 const changeData = function () {
     var fs = require('fs')
     // 异步读取
-    fs.readFile('douban.json', function (err, data) {
+    fs.readFile('douban.js', function (err, data) {
         if (err) {
             return console.error(err);
         } else {
             var txtData = data.toString()
             var douban = txtData.split("][").join(',')
-            fs.writeFile('douban.json', douban, function(error) {
+            fs.writeFile('douban.js', douban, function(error) {
                 if (error !== null) {
                     console.log('--- 写入文件错误', error)
                 } else {
@@ -100,6 +101,13 @@ const changeData = function () {
 }
 
 const _main = function () {
+    var fs = require('fs')
+
+    fs.writeFile('douban.js', 'var movieJson = ', (err) => {
+        if (err) throw err;
+        console.log('--- 变量名添加成功');
+    })
+
     for (var i = 0; i < 10; i++) {
         var l = i * 25
         var url = 'https://movie.douban.com/top250?start=' + l +'&filter='

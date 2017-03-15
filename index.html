@@ -12,6 +12,7 @@
         <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/map/js/world.js"></script>
         <script type="text/javascript" src="http://api.map.baidu.com/api?v=2.0&ak=ZUONbpqGBsYGXNIYHicvbAbM"></script>
         <script type="text/javascript" src="http://echarts.baidu.com/gallery/vendors/echarts/extension/bmap.min.js"></script>
+        <script src="douban.js"></script>
         <script src="movie.js"></script>
         <script>
             var dom = document.querySelector("#container")
@@ -76,7 +77,13 @@
                     textAlign: 'center'
                 }, {
                     text: '豆瓣电影---年代数据分析',
+                    subtext: '总计 ' + typecountryJson.all,
                     x: '75%',
+                    textAlign: 'center'
+                }, {
+                    text: '豆瓣电影---TOP10',
+                    x: '75%',
+                    y: '45%',
                     textAlign: 'center'
                 }],
                 grid: [{
@@ -194,6 +201,20 @@
                     })
                 }]
             }
+
+
+
+            var topMovie = rankAnalysis()
+            for (var i = 0; i < topMovie.length; i++) {
+                var t = {
+                    text: topMovie[i][0].name + '    ' + topMovie[i][0].score,
+                    x: '75%',
+                    y: (i*5+50) + '%',
+                    textAlign: 'center'
+                }
+                option.title.push(t)
+            }
+
             if (option && typeof option === "object") {
                 myChart.setOption(option, true)
             }
