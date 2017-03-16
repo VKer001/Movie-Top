@@ -107,10 +107,14 @@ var rankAnalysis = function() {
     for (var i = 0; i < movieJson.length; i++) {
         var rankCountry = movieJson[i].rank
         if (rankCountry < 11) {
-            var m = [movieJson[i]]
+            var m = movieJson[i]
             topName.push(m)
         }
     }
+    // _.sortBy(topName, function(topName) {
+    //     return -topName.score
+    // })
+
     return topName
 }
 
